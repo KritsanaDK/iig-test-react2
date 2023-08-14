@@ -17,11 +17,10 @@ import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { Route } from "react-router-dom";
 import { UserContext } from "../../App";
-
+import { async } from "q";
 
 export default function Login() {
-
-  const { userInfo, setUserInfo} = useContext(UserContext);
+  const { userInfo, setUserInfo } = useContext(UserContext);
 
   const validationSchema = Yup.object().shape({
     username: Yup.string()
@@ -44,37 +43,31 @@ export default function Login() {
 
   const onSubmit = (data: any) => {
     let json_data = JSON.stringify(data, null, 2);
-    // console.log(json_data);
+    console.log(json_data);
 
     let user = data.username;
     let pass = data.password;
 
-    const article = { user: user, pass: pass };
-    
+    const param = { user: user, pass: pass };
+    //  window.location.href = "/Register";
+
     axios
-        .post("http://localhost:6180/logIn", article, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          console.log(res.data[0]);
-          setUserInfo(res.data[0])
-          console.log(userInfo);
-          if(res.data.length == 1){
-           // window.location.href = "/Register";
-          }
-         
-          // console.log(userInfo);
-          
-        })
-        .catch((err) => {
-          console.log(err);
-        }); 
+      .post("http://localhost:6180/logIn", param, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => res.data[0])
+      .then((json) => {
+        console.log(json);
+        let json_data = JSON.stringify(json, null, 2);
+        localStorage.setItem("json", json_data);
 
-        
-
-        
+        // window.location.href = "/Register";
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
