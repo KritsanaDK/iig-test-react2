@@ -9,18 +9,20 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Label } from "@mui/icons-material";
 import FormLabel from "@mui/material/FormLabel/FormLabel";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { type } from "os";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { FiCamera } from "react-icons/fi";
 import Stack from "@mui/material/Stack";
+import { UserContext } from "../../App";
 
 function Register() {
   // const [url, setUrl] = useState("https://i.imgur.com/ndu6pfe.png");
   // const [selectedImage, setSelectedImage] = useState("https://i.imgur.com/ndu6pfe.png");
   const [selectedImage, setSelectedImage] = useState("");
+  const { userInfo, setUserInfo} = useContext(UserContext);
 
   const previewImage = (e: any) => {
     // const file = e.target.files[0];
@@ -31,7 +33,6 @@ function Register() {
     }
   };
 
-  const MAX_FILE_SIZE = 102400; //100KB
 
   const validationSchema = Yup.object().shape({
     username: Yup.string()
@@ -59,8 +60,18 @@ function Register() {
   });
 
   const onSubmit = (data: any) => {
+    console.log(data)
     console.log(JSON.stringify(data, null, 2));
+
+
+
   };
+
+  useEffect(() => {
+    console.log("useEffect")
+    console.log(userInfo)
+    
+  },[]);
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -135,7 +146,20 @@ function Register() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}> */}
+     
+
+            {/* <TextField
+              required
+              id="ImageFile"
+              label="ImageFile"
+              type="file"
+              fullWidth
+              {...register("ImageFile")}
+              error={errors.ImageFile ? true : false}
+              onChange={previewImage}
+            />  */}
+
             {/* <Stack direction="row" alignItems="center" spacing={2}>
               <Button variant="contained" component="label">
                 Upload
@@ -149,8 +173,9 @@ function Register() {
                   name="ImageFile"
                 />
               </Button>
-            </Stack> 
-            {selectedImage && (
+            </Stack> */}
+
+            {/* {selectedImage && (
               <img
                 src={selectedImage}
                 alt="Preview"
@@ -160,45 +185,8 @@ function Register() {
             )}
             <Typography variant="inherit" color="textSecondary">
               {errors.ImageFile?.message}
-            </Typography>  */}
-
-            {/* <TextField
-              required
-              id="ImageFile"
-              type="file"
-              fullWidth
-              {...register("ImageFile")}
-              error={errors.ImageFile ? true : false}
-              onChange={previewImage}
-            /> */}
-
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <Button variant="contained" component="label">
-                Upload
-                <input
-                  hidden
-                  accept="image/*"
-                  multiple
-                  type="file"
-                  onChange={previewImage}
-                  id="ImageFile"
-                  name="ImageFile"
-                />
-              </Button>
-            </Stack>
-
-            {selectedImage && (
-              <img
-                src={selectedImage}
-                alt="Preview"
-                loading="lazy"
-                height="200"
-              />
-            )}
-            <Typography variant="inherit" color="textSecondary">
-              {errors.ImageFile?.message}
-            </Typography>
-          </Grid>
+            </Typography> */}
+          {/* </Grid> */}
 
           <Button
             type="submit"

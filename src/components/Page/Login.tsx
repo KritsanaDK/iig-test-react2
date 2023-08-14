@@ -9,13 +9,20 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Label } from "@mui/icons-material";
 import FormLabel from "@mui/material/FormLabel/FormLabel";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { type } from "os";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm, Controller } from "react-hook-form";
+import axios from "axios";
+import { Route } from "react-router-dom";
+import { UserContext } from "../../App";
+
 
 export default function Login() {
+
+  const { userInfo, setUserInfo} = useContext(UserContext);
+
   const validationSchema = Yup.object().shape({
     username: Yup.string()
       .required("Username is required")
@@ -36,7 +43,38 @@ export default function Login() {
   });
 
   const onSubmit = (data: any) => {
-    console.log(JSON.stringify(data, null, 2));
+    let json_data = JSON.stringify(data, null, 2);
+    // console.log(json_data);
+
+    let user = data.username;
+    let pass = data.password;
+
+    const article = { user: user, pass: pass };
+    
+    axios
+        .post("http://localhost:6180/logIn", article, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          console.log(res.data[0]);
+          setUserInfo(res.data[0])
+          console.log(userInfo);
+          if(res.data.length == 1){
+           // window.location.href = "/Register";
+          }
+         
+          // console.log(userInfo);
+          
+        })
+        .catch((err) => {
+          console.log(err);
+        }); 
+
+        
+
+        
   };
 
   return (

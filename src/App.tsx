@@ -26,6 +26,7 @@ import Login from "./components/Page/Login";
 import Register from "./components/Page/Register";
 
 import MemuData from "./components/Data/MemuData";
+import { createContext, useState } from "react";
 
 const drawerWidth = 240;
 
@@ -78,9 +79,13 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
+export const UserContext = createContext<any>({});
+
 function App() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+  const [userInfo, setUserInfo] = useState({});
+  
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -91,81 +96,83 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
-      <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-        <AppBar position="fixed" open={open}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{ mr: 2, ...(open && { display: "none" }) }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" noWrap component="div">
-              IIG Test
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            "& .MuiDrawer-paper": {
+    <UserContext.Provider value={{ userInfo, setUserInfo }}>
+      <BrowserRouter>
+        <Box sx={{ display: "flex" }}>
+          <CssBaseline />
+          <AppBar position="fixed" open={open}>
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={{ mr: 2, ...(open && { display: "none" }) }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" noWrap component="div">
+                IIG Test
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            sx={{
               width: drawerWidth,
-              boxSizing: "border-box",
-            },
-          }}
-          variant="persistent"
-          anchor="left"
-          open={open}
-        >
-          <DrawerHeader>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "ltr" ? (
-                <ChevronLeftIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <List>
-            {MemuData.map((menu, index) => (
-              <ListItem key={index} disablePadding>
-                <Link
-                  href={menu.path}
-                  style={{
-                    paddingLeft: 13,
-                    textDecoration: "none",
-                    color: "#424242",
-                    width: "100%",
-                  }}
-                >
-                  <ListItemButton>
-                    <ListItemIcon>{menu.icon}</ListItemIcon>
-                    <ListItemText primary={menu.title} />
-                  </ListItemButton>
-                </Link>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-        </Drawer>
-        <Main open={open}>
-          <DrawerHeader />
+              flexShrink: 0,
+              "& .MuiDrawer-paper": {
+                width: drawerWidth,
+                boxSizing: "border-box",
+              },
+            }}
+            variant="persistent"
+            anchor="left"
+            open={open}
+          >
+            <DrawerHeader>
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === "ltr" ? (
+                  <ChevronLeftIcon />
+                ) : (
+                  <ChevronRightIcon />
+                )}
+              </IconButton>
+            </DrawerHeader>
+            <Divider />
+            <List>
+              {MemuData.map((menu, index) => (
+                <ListItem key={index} disablePadding>
+                  <Link
+                    href={menu.path}
+                    style={{
+                      paddingLeft: 13,
+                      textDecoration: "none",
+                      color: "#424242",
+                      width: "100%",
+                    }}
+                  >
+                    <ListItemButton>
+                      <ListItemIcon>{menu.icon}</ListItemIcon>
+                      <ListItemText primary={menu.title} />
+                    </ListItemButton>
+                  </Link>
+                </ListItem>
+              ))}
+            </List>
+            <Divider />
+          </Drawer>
+          <Main open={open}>
+            <DrawerHeader />
 
-          <Routes>
-            <Route path="*" Component={Home} />
-            <Route path="/Login" Component={Login} />
-            <Route path="/Register" Component={Register} />
-          </Routes>
-        </Main>
-      </Box>
-    </BrowserRouter>
+            <Routes>
+              <Route path="*" Component={Home} />
+              <Route path="/Login" Component={Login} />
+              <Route path="/Register" Component={Register} />
+            </Routes>
+          </Main>
+        </Box>
+      </BrowserRouter>
+    </UserContext.Provider>
   );
 }
 
