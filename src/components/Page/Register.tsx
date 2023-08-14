@@ -17,7 +17,7 @@ import { useForm, Controller } from "react-hook-form";
 import { FiCamera } from "react-icons/fi";
 import Stack from "@mui/material/Stack";
 
-function Register(props: any) {
+function Register() {
   const [userName, setUserName] = useState("No Data");
   const validationSchema = Yup.object().shape({
     username: Yup.string()
@@ -48,13 +48,14 @@ function Register(props: any) {
   };
 
   useEffect(() => {
-    async function fetchItems() {
-      let temp_json = await JSON.parse(localStorage.getItem("json") || "");
-      console.log(temp_json.Username);
-      setUserName("xxxxxxxxxxx");
-    }
-    fetchItems();
-  }, []);
+    setTimeout(() => {
+      let temp_json = JSON.parse(localStorage.getItem("json") || "");
+      setUserName(temp_json.Username);
+      console.log(userName);
+    }, 1000);
+
+    register({ userName: "", password: "", FirstName: "" });
+  });
   return (
     <Container component="main" maxWidth="xs">
       <Box
