@@ -9,29 +9,28 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Label } from "@mui/icons-material";
 import FormLabel from "@mui/material/FormLabel/FormLabel";
-import { useState, useContext, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { type } from "os";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm, Controller } from "react-hook-form";
 import { FiCamera } from "react-icons/fi";
 import Stack from "@mui/material/Stack";
-import { UserContext } from "../../App";
-import { async } from "q";
-import React, { Fragment } from "react";
 
-function Register() {
+function Register(props: any) {
+  const [userName, setUserName] = useState("No Data");
   const validationSchema = Yup.object().shape({
-    fullname: Yup.string().required("Fullname is required"),
     username: Yup.string()
       .required("Username is required")
-      .min(6, "Username must be at least 6 characters")
-      .max(20, "Username must not exceed 20 characters"),
-    email: Yup.string().required("Email is required").email("Email is invalid"),
+      .min(4, "Username must be at least 4 characters")
+      .max(12, "Username must not exceed 12 characters"),
     password: Yup.string()
       .required("Password is required")
-      .min(6, "Password must be at least 6 characters")
-      .max(40, "Password must not exceed 40 characters"),
+      .min(6, "Password must be at least 6 characters"),
+
+    FirstName: Yup.string()
+      .required("First Name is required")
+      .max(60, "First Name must not exceed 60 characters"),
   });
 
   const {
@@ -40,6 +39,7 @@ function Register() {
     handleSubmit,
     formState: { errors },
   } = useForm({
+    defaultValues: { username: userName },
     resolver: yupResolver(validationSchema),
   });
 
@@ -47,72 +47,98 @@ function Register() {
     console.log(JSON.stringify(data, null, 2));
   };
 
+  useEffect(() => {
+    async function fetchItems() {
+      let temp_json = await JSON.parse(localStorage.getItem("json") || "");
+      console.log(temp_json.Username);
+      setUserName("xxxxxxxxxxx");
+    }
+    fetchItems();
+  }, []);
   return (
     <Container component="main" maxWidth="xs">
-      <Fragment>
-        <Box px={3} py={2}>
-          <Typography variant="h6" align="center" margin="dense">
-            React Hook Form - Material UI - Validation
-          </Typography>
-
-          <Grid container spacing={1}>
-            <Grid item xs={12} sm={12}>
-              <TextField
-                required
-                id="fullname"
-                label="Full Name"
-                fullWidth
-                margin="dense"
-                {...register("fullname")}
-                error={errors.fullname ? true : false}
-              />
-              <Typography variant="inherit" color="textSecondary">
-                {errors.fullname?.message}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                id="username"
-                label="Username"
-                fullWidth
-                margin="dense"
-                {...register("username")}
-                error={errors.username ? true : false}
-              />
-              <Typography variant="inherit" color="textSecondary">
-                {errors.username?.message}
-              </Typography>
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                id="password"
-                label="Password"
-                type="password"
-                fullWidth
-                margin="dense"
-                {...register("password")}
-                error={errors.password ? true : false}
-              />
-              <Typography variant="inherit" color="textSecondary">
-                {errors.password?.message}
-              </Typography>
-            </Grid>
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "left",
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Register
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+          sx={{ mt: 1 }}
+        >
+          <Grid item xs={12} sm={6}>
+            <TextField
+              required
+              id="username"
+              label="Username"
+              fullWidth
+              margin="dense"
+              {...register("username")}
+              error={errors.username ? true : false}
+            />
+            <Typography variant="inherit" color="textSecondary">
+              {errors.username?.message}
+            </Typography>
           </Grid>
 
-          <Box mt={3}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit(onSubmit)}
-            >
-              Register
-            </Button>
-          </Box>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              required
+              id="password"
+              label="Password"
+              type="password"
+              fullWidth
+              margin="dense"
+              {...register("password")}
+              error={errors.password ? true : false}
+            />
+            <Typography variant="inherit" color="textSecondary">
+              {errors.password?.message}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              required
+              id="FirstName"
+              label="FirstName"
+              fullWidth
+              margin="dense"
+              {...register("FirstName")}
+              error={errors.FirstName ? true : false}
+            />
+            <Typography variant="inherit" color="textSecondary">
+              {errors.FirstName?.message}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="LastName "
+              label="LastName"
+              fullWidth
+              margin="dense"
+            />
+          </Grid>
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Register
+          </Button>
         </Box>
-      </Fragment>
+      </Box>
     </Container>
   );
 }

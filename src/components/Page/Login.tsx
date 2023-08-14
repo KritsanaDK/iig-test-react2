@@ -63,7 +63,7 @@ export default function Login() {
         let json_data = JSON.stringify(json, null, 2);
         localStorage.setItem("json", json_data);
 
-        // window.location.href = "/Register";
+        window.location.href = "/Register";
       })
       .catch((err) => {
         console.log(err);
