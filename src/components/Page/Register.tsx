@@ -18,12 +18,20 @@ import { FiCamera } from "react-icons/fi";
 import Stack from "@mui/material/Stack";
 
 function Register() {
-  const [url, setUrl] = useState("https://i.imgur.com/ndu6pfe.png");
+  // const [url, setUrl] = useState("https://i.imgur.com/ndu6pfe.png");
+  // const [selectedImage, setSelectedImage] = useState("https://i.imgur.com/ndu6pfe.png");
+  const [selectedImage, setSelectedImage] = useState("");
 
-  const previewImage = (files: any) => {
-    console.log(files);
-    setUrl(files.base64);
+  const previewImage = (e: any) => {
+    // const file = e.target.files[0];
+
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedImage(URL.createObjectURL(e.target.files[0]));
+      // setSelectedImage(e.target.files[0]);
+    }
   };
+
+  const MAX_FILE_SIZE = 102400; //100KB
 
   const validationSchema = Yup.object().shape({
     username: Yup.string()
@@ -37,6 +45,8 @@ function Register() {
     FirstName: Yup.string()
       .required("First Name is required")
       .max(60, "First Name must not exceed 60 characters"),
+
+    ImageFile: Yup.mixed().required("ImageFile Name is required"),
   });
 
   const {
@@ -118,7 +128,6 @@ function Register() {
 
           <Grid item xs={12} sm={6}>
             <TextField
-              required
               id="LastName "
               label="LastName"
               fullWidth
@@ -126,7 +135,70 @@ function Register() {
             />
           </Grid>
 
-          <Grid></Grid>
+          <Grid item xs={12} sm={6}>
+            {/* <Stack direction="row" alignItems="center" spacing={2}>
+              <Button variant="contained" component="label">
+                Upload
+                <input
+                  hidden
+                  accept="image/*"
+                  multiple
+                  type="file"
+                  onChange={previewImage}
+                  id="ImageFile"
+                  name="ImageFile"
+                />
+              </Button>
+            </Stack> 
+            {selectedImage && (
+              <img
+                src={selectedImage}
+                alt="Preview"
+                loading="lazy"
+                height="200"
+              />
+            )}
+            <Typography variant="inherit" color="textSecondary">
+              {errors.ImageFile?.message}
+            </Typography>  */}
+
+            {/* <TextField
+              required
+              id="ImageFile"
+              type="file"
+              fullWidth
+              {...register("ImageFile")}
+              error={errors.ImageFile ? true : false}
+              onChange={previewImage}
+            /> */}
+
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <Button variant="contained" component="label">
+                Upload
+                <input
+                  hidden
+                  accept="image/*"
+                  multiple
+                  type="file"
+                  onChange={previewImage}
+                  id="ImageFile"
+                  name="ImageFile"
+                />
+              </Button>
+            </Stack>
+
+            {selectedImage && (
+              <img
+                src={selectedImage}
+                alt="Preview"
+                loading="lazy"
+                height="200"
+              />
+            )}
+            <Typography variant="inherit" color="textSecondary">
+              {errors.ImageFile?.message}
+            </Typography>
+          </Grid>
 
           <Button
             type="submit"
@@ -134,7 +206,7 @@ function Register() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Register
           </Button>
         </Box>
       </Box>
